@@ -4,17 +4,39 @@ Verdiğiniz IP'leri, verdiğiniz portlarda tarar ve her `IP:port` için
 **açık / kapalı / filtreli** sonucunu döndürür. Komut satırı ve yerel web
 arayüzü olmak üzere iki kullanım biçimi vardır.
 
-* **Bağımlılık yok** — yalnızca Python 3.9+ standart kütüphanesi.
+* **Bağımlılık yok** — yalnızca Python 3.10+ standart kütüphanesi.
 * **Root gerekmez** — ham (SYN) paket değil, normal TCP connect denemesi.
 * **Hızlı** — asyncio; loopback'te ~30.000 prob/sn, bir `/24` ağı × 3 port
   1 saniyenin altında.
 
 ---
 
+## Kurulum (başka bir cihazda)
+
+Tek gereksinim **Python 3.10 veya üstü**. Kurulacak paket, derlenecek bir şey
+yok; depoyu indirip çalıştırmak yeterli.
+
+```bash
+git clone https://github.com/TanwrAslan/ipscan.git
+cd ipscan
+python3 -m ipscan --version
+```
+
+Git yoksa: GitHub sayfasında **Code → Download ZIP**, arşivi açın, klasörün
+içine girip aynı komutu çalıştırın.
+
+| Sistem | Notlar |
+|---|---|
+| Linux | Kutudan çıktığı gibi çalışır (`python3`) |
+| macOS | Aynı; Python yoksa `brew install python` |
+| Windows | Komutlarda `python3` yerine `python`, `./ipscan-run` yerine `python -m ipscan`. Eş zamanlılık otomatik olarak daha temkinli seçilir |
+
+Doğrulama: `python3 -m unittest discover -s tests -t .` → 71 test geçmeli.
+
 ## Hızlı başlangıç
 
 ```bash
-cd ~/Desktop/Proje-IP-Tarama
+cd ipscan     # depo klasörü
 
 # tek IP, sık kullanılan 100 port
 python3 -m ipscan 192.168.1.1 -p top100

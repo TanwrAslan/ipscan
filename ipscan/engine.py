@@ -18,6 +18,7 @@ import errno
 import ipaddress
 import socket
 import struct
+import sys
 import time
 from dataclasses import dataclass, asdict
 from typing import AsyncIterator, Callable, Iterable, Iterator
@@ -49,7 +50,9 @@ _FD_ERRNOS = {errno.EMFILE, errno.ENFILE, errno.ENOBUFS, errno.ENOMEM}
 BANNER_MAX_BYTES = 256
 BANNER_TIMEOUT = 0.6
 
-_LINGER_OFF = struct.pack("ii", 1, 0)  # onoff=1, linger=0 -> kapatirken RST
+# onoff=1, linger=0 -> kapatirken RST gonder, TIME_WAIT birakma.
+# Windows'ta struct alanlari u_short, POSIX'te int'tir.
+_LINGER_OFF = struct.pack("hh" if sys.platform == "win32" else "ii", 1, 0)
 
 
 @dataclass(slots=True)

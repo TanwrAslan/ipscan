@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(go version *)",
+      "Bash(python3 -m unittest discover -s tests -t . -v)",
+      "Bash(python3 -m unittest discover -s tests -t .)",
+      "Bash(python3 -m ipscan --help)",
+      "Bash(python3 -m ipscan 127.0.0.1 -p top100 --no-color)",
+      "Bash(echo \"exit=$?\")",
+      "Bash(time python3 -m ipscan 127.0.0.1 -p all --no-color -q --json /tmp/claude-1000/-home-taner-aslan-Desktop-Proje-IP-Tarama/eb0d7d59-aec8-4f54-b3c4-887282f5dc1a/scratchpad/r.json --open-only)",
+      "Bash(time python3 -m ipscan 192.168.1.0/24 -p 22,80,443 --timeout 0.8 -r 0 --no-color)",
+      "Bash(python3 -)",
+      "Bash(python3 *)",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(command -v gh)",
+      "Bash(gh auth *)",
+      "Bash(gh repo *)",
+      "Bash(git push *)"
+    ]
+  }
+}
