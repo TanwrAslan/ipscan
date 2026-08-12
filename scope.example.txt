@@ -1,0 +1,14 @@
+# ipscan kapsam (allowlist) dosyasi
+#
+# Bu dosyayi "scope.txt" adiyla kopyalarsaniz, ipscan yalnizca burada
+# listelenen aglari taramaya izin verir; kapsam disi bir hedef verirseniz
+# tarama hic baslamaz (cikis kodu 3).
+#
+#   cp scope.example.txt scope.txt
+#
+# Her satir bir IP veya CIDR. "#" ile yorum yazilabilir.
+
+127.0.0.1/32          # yerel makine
+192.168.0.0/16        # ev/ofis ic agi
+10.0.0.0/8            # ozel ag
+172.16.0.0/12         # ozel ag

@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+scope.txt
+*.json
+*.csv
+!scope.example.txt
+
+# Claude Code yerel izin ayarlari (makineye ozel)
+.claude/settings.local.json

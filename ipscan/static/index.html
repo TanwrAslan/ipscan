@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>ipscan — Port Tarayıcı</title>
+<link rel="stylesheet" href="/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%F0%9F%9B%B0%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">◉</span>
+    <div>
+      <h1>ipscan</h1>
+      <p class="sub">Hızlı TCP connect port tarayıcı — yerel arayüz</p>
+    </div>
+  </div>
+  <div class="badges">
+    <span class="badge" id="scopeBadge" title="Kapsam (izin verilen ağlar)">kapsam: —</span>
+    <span class="badge" id="limitBadge" title="Eş zamanlılık tavanı">limit: —</span>
+    <span class="badge ver" id="verBadge">v—</span>
+  </div>
+</header>
+
+<main>
+  <section class="panel form" aria-label="Tarama ayarları">
+    <form id="scanForm" autocomplete="off">
+      <div class="grid">
+        <label class="field wide">
+          <span>Hedefler <small>IP · CIDR · aralık (satır veya virgülle ayırın)</small></span>
+          <textarea id="targets" name="targets" rows="5" spellcheck="false"
+            placeholder="192.168.1.0/24&#10;10.0.0.5&#10;10.0.0.10-40"></textarea>
+        </label>
+
+        <label class="field wide">
+          <span>Portlar <small>22,80,443 · 1-1024 · top100 · web · db · remote · all</small></span>
+          <input id="ports" name="ports" value="top100" spellcheck="false">
+        </label>
+
+        <div class="presets" role="group" aria-label="Hazır port setleri">
+          <button type="button" class="chip" data-ports="top100">top100</button>
+          <button type="button" class="chip" data-ports="web">web</button>
+          <button type="button" class="chip" data-ports="db">db</button>
+          <button type="button" class="chip" data-ports="remote">remote</button>
+          <button type="button" class="chip" data-ports="1-1024">1-1024</button>
+          <button type="button" class="chip" data-ports="all">tümü</button>
+        </div>
+
+        <label class="field">
+          <span>Zaman aşımı <small>saniye</small></span>
+          <input id="timeout" type="number" min="0.05" max="15" step="0.05" value="1">
+        </label>
+        <label class="field">
+          <span>Eş zamanlılık <small>boş = otomatik</small></span>
+          <input id="concurrency" type="number" min="1" step="1" placeholder="otomatik">
+        </label>
+        <label class="field">
+          <span>Yeniden deneme <small>filtreli için</small></span>
+          <input id="retries" type="number" min="0" max="3" step="1" value="1">
+        </label>
+        <label class="field">
+          <span>Hız limiti <small>prob/sn, boş = sınırsız</small></span>
+          <input id="rate" type="number" min="1" step="100" placeholder="sınırsız">
+        </label>
+
+        <div class="toggles">
+          <label class="check"><input type="checkbox" id="banner"> Banner oku</label>
+          <label class="check"><input type="checkbox" id="resolve"> DNS çözümle</label>
+          <label class="check"><input type="checkbox" id="streamAll"> Kapalı portları da göster</label>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="submit" id="startBtn" class="primary">Taramayı başlat</button>
+        <button type="button" id="cancelBtn" class="ghost" disabled>Durdur</button>
+        <span class="spacer"></span>
+        <button type="button" id="exportJson" class="ghost" disabled>JSON indir</button>
+        <button type="button" id="exportCsv" class="ghost" disabled>CSV indir</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="panel" aria-label="Durum">
+    <div id="notices" class="notices" hidden></div>
+    <div class="progress-wrap">
+      <div class="progress"><div class="bar" id="bar"></div></div>
+      <div class="progress-meta">
+        <span id="progressText">Hazır.</span>
+        <span id="rateText" class="dim"></span>
+      </div>
+    </div>
+    <div class="stats" id="stats">
+      <div class="stat open"><b id="sOpen">0</b><span>açık</span></div>
+      <div class="stat closed"><b id="sClosed">0</b><span>kapalı</span></div>
+      <div class="stat filtered"><b id="sFiltered">0</b><span>filtreli</span></div>
+      <div class="stat other"><b id="sOther">0</b><span>diğer</span></div>
+      <div class="stat total"><b id="sDone">0</b><span>tamamlanan</span></div>
+    </div>
+  </section>
+
+  <section class="panel results" aria-label="Sonuçlar">
+    <div class="results-head">
+      <h2>Sonuçlar <span class="count" id="rowCount">0</span></h2>
+      <div class="filters">
+        <input id="filter" placeholder="filtre: ip, port, servis…" spellcheck="false">
+        <label class="check"><input type="checkbox" id="onlyOpen" checked> yalnızca açık</label>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table id="table">
+        <thead>
+          <tr><th data-sort="host">Hedef</th><th data-sort="port">Port</th>
+              <th data-sort="state">Durum</th><th data-sort="latency_ms">Süre</th>
+              <th>Ayrıntı</th></tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <p class="empty" id="empty">Henüz sonuç yok.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span>Yalnızca yetkili olduğunuz sistemleri tarayın. Ham soket kullanılmaz, root gerekmez.</span>
+</footer>
+
+<script src="/app.js"></script>
+</body>
+</html>

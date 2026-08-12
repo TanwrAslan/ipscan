@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# ipscan baslatici. Ornek:
+#   ./ipscan 192.168.1.0/24 -p top100
+#   ./ipscan web
+set -euo pipefail
+cd "$(dirname "$0")"
+exec python3 -m ipscan "$@"
