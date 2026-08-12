@@ -229,6 +229,13 @@ tests/         birim testleri
 
 ---
 
+## Lisans
+
+MIT — ayrıntılar için [LICENSE](LICENSE).
+
+---
+
 **Yasal uyarı:** Bu araç yalnızca sahibi olduğunuz veya taramak için yazılı
 izniniz bulunan sistemlerde kullanılmalıdır. İzinsiz port taraması çoğu
-ülkede suçtur.
+ülkede suçtur. Yazılım "olduğu gibi" sunulur; kullanımından doğacak
+sorumluluk kullanıcıya aittir.
